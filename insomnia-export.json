@@ -1,0 +1,114 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-09-18T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_littlelemon",
+      "_type": "workspace",
+      "name": "Little Lemon Capstone API",
+      "description": "Menu items, table bookings, registration and token auth"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_littlelemon",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://127.0.0.1:8000",
+        "token": ""
+      }
+    },
+    {
+      "_id": "req_register",
+      "_type": "request",
+      "parentId": "wrk_littlelemon",
+      "name": "Register user",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/users/",
+      "body": {
+        "mimeType": "application/x-www-form-urlencoded",
+        "params": [
+          {"name": "username", "value": "alice"},
+          {"name": "email", "value": "alice@example.com"},
+          {"name": "password", "value": "StrongPass123"}
+        ]
+      }
+    },
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "parentId": "wrk_littlelemon",
+      "name": "Token login",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/token/login/",
+      "body": {
+        "mimeType": "application/x-www-form-urlencoded",
+        "params": [
+          {"name": "username", "value": "alice"},
+          {"name": "password", "value": "StrongPass123"}
+        ]
+      }
+    },
+    {
+      "_id": "req_menu_list",
+      "_type": "request",
+      "parentId": "wrk_littlelemon",
+      "name": "List menu items",
+      "method": "GET",
+      "url": "{{ base_url }}/api/menu-items/"
+    },
+    {
+      "_id": "req_menu_create",
+      "_type": "request",
+      "parentId": "wrk_littlelemon",
+      "name": "Create menu item (Manager only)",
+      "method": "POST",
+      "url": "{{ base_url }}/api/menu-items/",
+      "headers": [
+        {"name": "Authorization", "value": "Token {{ token }}"}
+      ],
+      "body": {
+        "mimeType": "application/x-www-form-urlencoded",
+        "params": [
+          {"name": "title", "value": "Lemon Dessert"},
+          {"name": "price", "value": "6.00"},
+          {"name": "featured", "value": "false"},
+          {"name": "category_id", "value": "1"}
+        ]
+      }
+    },
+    {
+      "_id": "req_bookings_list",
+      "_type": "request",
+      "parentId": "wrk_littlelemon",
+      "name": "List my bookings",
+      "method": "GET",
+      "url": "{{ base_url }}/api/bookings/",
+      "headers": [
+        {"name": "Authorization", "value": "Token {{ token }}"}
+      ]
+    },
+    {
+      "_id": "req_bookings_create",
+      "_type": "request",
+      "parentId": "wrk_littlelemon",
+      "name": "Create booking",
+      "method": "POST",
+      "url": "{{ base_url }}/api/bookings/",
+      "headers": [
+        {"name": "Authorization", "value": "Token {{ token }}"}
+      ],
+      "body": {
+        "mimeType": "application/x-www-form-urlencoded",
+        "params": [
+          {"name": "name", "value": "Alice"},
+          {"name": "no_of_guests", "value": "2"},
+          {"name": "booking_date", "value": "2026-12-13"},
+          {"name": "booking_slot", "value": "19"}
+        ]
+      }
+    }
+  ]
+}
