@@ -12,44 +12,49 @@ SETUP
 7. (Optional) python manage.py createsuperuser
 8. python manage.py runserver
 
-API PATHS TO TEST (with Insomnia or any REST client)
------------------------------------------------------
-Registration & authentication (Djoser + token auth):
-  POST   /auth/users/                register a new user (username, email, password)
-  POST   /auth/token/login/          obtain an auth token (username, password)
-  POST   /auth/token/logout/         invalidate the current token (needs Authorization header)
+API PATHS TO TEST (with Insomnia, a browser, or any REST client)
+------------------------------------------------------------------
+Home page:
+  GET    /                                  Django-rendered index.html
 
-Menu items (read: anyone; write: Manager/staff users only):
-  GET    /api/menu-items/
-  POST   /api/menu-items/
-  GET    /api/menu-items/<id>/
-  PUT    /api/menu-items/<id>/
-  PATCH  /api/menu-items/<id>/
-  DELETE /api/menu-items/<id>/
+Menu (ViewSet, browsable API, open read / auth required to write):
+  GET    /restaurant/menu/
+  POST   /restaurant/menu/
+  GET    /restaurant/menu/<id>/
+  PUT    /restaurant/menu/<id>/
+  PATCH  /restaurant/menu/<id>/
+  DELETE /restaurant/menu/<id>/
 
-Table bookings (all require: Authorization: Token <token>):
-  GET    /api/bookings/
-  POST   /api/bookings/              (name, no_of_guests, booking_date, booking_slot)
-  GET    /api/bookings/<id>/
-  PUT    /api/bookings/<id>/
-  PATCH  /api/bookings/<id>/
-  DELETE /api/bookings/<id>/
+Booking (ViewSet, browsable API, auth required to write):
+  GET    /restaurant/booking/
+  POST   /restaurant/booking/
+  GET    /restaurant/booking/<id>/
+  PUT    /restaurant/booking/<id>/
+  PATCH  /restaurant/booking/<id>/
+  DELETE /restaurant/booking/<id>/
 
-Example test flow in Insomnia:
-  1. POST /auth/users/ with a username/email/password to register.
-  2. POST /auth/token/login/ with the same username/password -> copy "auth_token".
-  3. On subsequent requests, add header: Authorization: Token <auth_token>
-  4. GET /api/menu-items/ works without a token (read-only, public).
-  5. POST /api/bookings/ with a token to create a reservation; a second POST
-     for the same booking_date + booking_slot will return 400 Bad Request
-     (duplicate slot protection).
-  6. To test the Manager-only menu-item write permissions, add the "Manager"
-     Django Group to a user (via /admin/) and use that user's token to
-     POST/PUT/DELETE /api/menu-items/.
+Token auth (DRF's built-in obtain_auth_token):
+  POST   /restaurant/api-token-auth/        (username, password) -> {"token": "..."}
+
+Registration & Djoser token auth:
+  POST   /auth/users/                       register a new user (username, email, password)
+  POST   /auth/token/login/                 obtain an auth token (username, password)
+  POST   /auth/token/logout/                invalidate the current token
+
+Example test flow (Insomnia or browser):
+  1. POST /auth/users/ with username/email/password to register.
+  2. POST /restaurant/api-token-auth/ (or /auth/token/login/) with the same
+     credentials -> copy the returned token.
+  3. On write requests, add header: Authorization: Token <token>
+  4. GET /restaurant/menu/ works without a token (open read).
+     Visit it directly in a browser to see DRF's Browsable API.
+  5. POST /restaurant/booking/ with a token to create a reservation.
 
 UNIT TESTS
 ----------
   python manage.py test restaurant
+
+Files: restaurant/test_models.py, restaurant/test_views.py
 
 An insomnia-export.json collection is included in the repository root and
 can be imported directly into Insomnia (Application Menu -> Preferences ->

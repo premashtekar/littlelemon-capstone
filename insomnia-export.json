@@ -8,7 +8,7 @@
       "_id": "wrk_littlelemon",
       "_type": "workspace",
       "name": "Little Lemon Capstone API",
-      "description": "Menu items, table bookings, registration and token auth"
+      "description": "Menu, Booking, token auth, Djoser registration"
     },
     {
       "_id": "env_base",
@@ -24,7 +24,7 @@
       "_id": "req_register",
       "_type": "request",
       "parentId": "wrk_littlelemon",
-      "name": "Register user",
+      "name": "Register user (Djoser)",
       "method": "POST",
       "url": "{{ base_url }}/auth/users/",
       "body": {
@@ -37,10 +37,25 @@
       }
     },
     {
-      "_id": "req_login",
+      "_id": "req_token_auth",
       "_type": "request",
       "parentId": "wrk_littlelemon",
-      "name": "Token login",
+      "name": "api-token-auth",
+      "method": "POST",
+      "url": "{{ base_url }}/restaurant/api-token-auth/",
+      "body": {
+        "mimeType": "application/x-www-form-urlencoded",
+        "params": [
+          {"name": "username", "value": "alice"},
+          {"name": "password", "value": "StrongPass123"}
+        ]
+      }
+    },
+    {
+      "_id": "req_djoser_login",
+      "_type": "request",
+      "parentId": "wrk_littlelemon",
+      "name": "Djoser token login",
       "method": "POST",
       "url": "{{ base_url }}/auth/token/login/",
       "body": {
@@ -57,46 +72,46 @@
       "parentId": "wrk_littlelemon",
       "name": "List menu items",
       "method": "GET",
-      "url": "{{ base_url }}/api/menu-items/"
+      "url": "{{ base_url }}/restaurant/menu/"
     },
     {
       "_id": "req_menu_create",
       "_type": "request",
       "parentId": "wrk_littlelemon",
-      "name": "Create menu item (Manager only)",
+      "name": "Create menu item",
       "method": "POST",
-      "url": "{{ base_url }}/api/menu-items/",
+      "url": "{{ base_url }}/restaurant/menu/",
       "headers": [
         {"name": "Authorization", "value": "Token {{ token }}"}
       ],
       "body": {
         "mimeType": "application/x-www-form-urlencoded",
         "params": [
-          {"name": "title", "value": "Lemon Dessert"},
+          {"name": "name", "value": "Lemon Dessert"},
           {"name": "price", "value": "6.00"},
-          {"name": "featured", "value": "false"},
-          {"name": "category_id", "value": "1"}
+          {"name": "menu_item_description", "value": "Zesty lemon cake"},
+          {"name": "inventory", "value": "20"}
         ]
       }
     },
     {
-      "_id": "req_bookings_list",
+      "_id": "req_booking_list",
       "_type": "request",
       "parentId": "wrk_littlelemon",
-      "name": "List my bookings",
+      "name": "List bookings",
       "method": "GET",
-      "url": "{{ base_url }}/api/bookings/",
+      "url": "{{ base_url }}/restaurant/booking/",
       "headers": [
         {"name": "Authorization", "value": "Token {{ token }}"}
       ]
     },
     {
-      "_id": "req_bookings_create",
+      "_id": "req_booking_create",
       "_type": "request",
       "parentId": "wrk_littlelemon",
       "name": "Create booking",
       "method": "POST",
-      "url": "{{ base_url }}/api/bookings/",
+      "url": "{{ base_url }}/restaurant/booking/",
       "headers": [
         {"name": "Authorization", "value": "Token {{ token }}"}
       ],
@@ -105,8 +120,7 @@
         "params": [
           {"name": "name", "value": "Alice"},
           {"name": "no_of_guests", "value": "2"},
-          {"name": "booking_date", "value": "2026-12-13"},
-          {"name": "booking_slot", "value": "19"}
+          {"name": "bookingdate", "value": "2026-12-13T19:00:00Z"}
         ]
       }
     }
